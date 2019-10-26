@@ -1,17 +1,20 @@
 package utils;
 
+import java.math.BigDecimal;
+
 public enum Beverage {
-  COFFEE(0.6),
-  TEA(0.4),
-  CHOCO(0.5);
+  COFFEE(BigDecimal.valueOf(0.6)),
+  TEA(BigDecimal.valueOf(0.4)),
+  CHOCO(BigDecimal.valueOf(0.5)),
+  ORANGE(BigDecimal.valueOf(0.6));
 
-  double price;
+  BigDecimal price;
 
-  public double getPrice(){
+  public BigDecimal getPrice(){
     return this.price;
   }
 
-  Beverage(double price){
+  Beverage(BigDecimal price){
     this.price = price;
   }
 }
