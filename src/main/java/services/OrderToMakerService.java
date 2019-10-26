@@ -18,6 +18,8 @@ public class OrderToMakerService {
 
   private static final String ORANGE = "orange juice.";
 
+  ReportService reportService = new ReportService();
+
   public OrderToMakerService(){
 
   }
@@ -27,11 +29,13 @@ public class OrderToMakerService {
     String nbSugar = order.getNbSugar()==0 ? "" : String.valueOf(order.getNbSugar());
     Beverage beverage;
     BigDecimal moneyGiven = order.getMoneyGiven();
+
     switch(order.getOrderType()){
       case 'C':
         beverage = Beverage.COFFEE;
         if (moneyGiven.compareTo(beverage.getPrice())>=0){
           result = "C" + extraHot(order.isExtraHot()) + ":" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
+          reportService.updateReport(order.getOrderType());
         } else {
           result = "M:"+ MISSING + (beverage.getPrice().subtract(moneyGiven)) + EURO_FOR_YOUR + COFFEE;
         }
@@ -40,6 +44,7 @@ public class OrderToMakerService {
         beverage = Beverage.TEA;
         if (moneyGiven.compareTo(beverage.getPrice())>=0){
           result = "T" + extraHot(order.isExtraHot()) + ":" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
+          reportService.updateReport(order.getOrderType());
         } else {
           result = "M:"+ MISSING + (beverage.getPrice().subtract(moneyGiven)) + EURO_FOR_YOUR + TEA;
         }
@@ -48,6 +53,7 @@ public class OrderToMakerService {
         beverage = Beverage.CHOCO;
         if (moneyGiven.compareTo(beverage.getPrice())>=0){
           result = "H" + extraHot(order.isExtraHot()) + ":" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
+          reportService.updateReport(order.getOrderType());
         } else {
           result = "M:"+ MISSING + (beverage.getPrice().subtract(moneyGiven)) + EURO_FOR_YOUR + CHOCO;
         }
@@ -56,6 +62,7 @@ public class OrderToMakerService {
         beverage = Beverage.ORANGE;
         if (moneyGiven.compareTo(beverage.getPrice())>=0){
           result = "O::";
+          reportService.updateReport(order.getOrderType());
         } else {
           result = "M:"+ MISSING + (beverage.getPrice().subtract(moneyGiven)) + EURO_FOR_YOUR + ORANGE;
         }
