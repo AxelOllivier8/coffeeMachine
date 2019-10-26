@@ -1,8 +1,19 @@
 package services;
 
 import models.Order;
+import utils.Beverage;
 
 public class OrderToMakerService {
+
+  private static final String MISSING = "Missing ";
+
+  private static final String EURO_FOR_YOUR = "€ for your ";
+
+  private static final String COFFEE = "coffee.";
+
+  private static final String TEA = "tea.";
+
+  private static final String CHOCO = "chocolate.";
 
   public OrderToMakerService(){
 
@@ -11,19 +22,32 @@ public class OrderToMakerService {
   public String makingDrinks(Order order){
     String result = "";
     String nbSugar = order.getNbSugar()==0 ? "" : String.valueOf(order.getNbSugar());
-
+    Beverage beverage;
+    double moneyGiven = order.getMoneyGiven();
     switch(order.getOrderType()){
       case 'C':
-        result = result+"C:" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
+        beverage = Beverage.COFFEE;
+        if (moneyGiven>=beverage.getPrice()){
+          result = "C:" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
+        } else {
+          result = "M:"+ MISSING + (beverage.getPrice()-moneyGiven) + EURO_FOR_YOUR + COFFEE;
+        }
         break;
       case 'T':
-        result = result + "T:" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
+        beverage = Beverage.TEA;
+        if (moneyGiven>=beverage.getPrice()){
+          result = "T:" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
+        } else {
+          result = "M:"+ MISSING + (beverage.getPrice()-moneyGiven) + EURO_FOR_YOUR + TEA;
+        }
         break;
       case 'H':
-        result = result + "H:" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
-        break;
-      case 'M':
-        result = result + "M:"+order.getMessageContent();
+        beverage = Beverage.CHOCO;
+        if (moneyGiven>=beverage.getPrice()){
+          result = "H:" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
+        } else {
+          result = "M:"+ MISSING + (beverage.getPrice()-moneyGiven) + EURO_FOR_YOUR + CHOCO;
+        }
         break;
       default:
         break;

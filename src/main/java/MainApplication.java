@@ -7,15 +7,8 @@ public class MainApplication {
 
   public static void main(String[] args) {
 
-    int nbSugar;
-    Order order;
-    System.out.println(args[0] + " " + args[1]);
-    if (!args[0].equals("M")){
-      nbSugar = Integer.valueOf(args[1]);
-      order = new Order(args[0].charAt(0), nbSugar);
-    } else {
-      order = new Order(args[0].charAt(0), args[1]);
-    }
+    Order order = new Order(args[0].charAt(0), Integer.valueOf(args[1]), Double.valueOf(args[2]));
+
     orderToMakerService = new OrderToMakerService();
     System.out.println(orderToMakerService.makingDrinks(order));
   }

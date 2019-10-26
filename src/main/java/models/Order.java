@@ -8,17 +8,21 @@ public class Order {
 
   private String messageContent;
 
+  private double moneyGiven;
+
   public Order() {
   }
 
-  public Order(char orderType, int nbSugar) {
+  public Order(char orderType, int nbSugar, double moneyGiven) {
     this.orderType = orderType;
     this.nbSugar = nbSugar;
+    this.moneyGiven = moneyGiven;
   }
 
-  public Order(char orderType, String messageContent) {
+  public Order(char orderType, String messageContent, double moneyGiven) {
     this.orderType = orderType;
     this.messageContent = messageContent;
+    this.moneyGiven = moneyGiven;
   }
 
   public char getOrderType() {
@@ -43,5 +47,13 @@ public class Order {
 
   public void setMessageContent(String messageContent) {
     this.messageContent = messageContent;
+  }
+
+  public double getMoneyGiven() {
+    return moneyGiven;
+  }
+
+  public void setMoneyGiven(double moneyGiven) {
+    this.moneyGiven = moneyGiven;
   }
 }
