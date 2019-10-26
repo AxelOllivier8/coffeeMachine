@@ -1,5 +1,6 @@
 package services;
 
+import java.math.BigDecimal;
 import models.Order;
 import utils.Beverage;
 
@@ -15,6 +16,8 @@ public class OrderToMakerService {
 
   private static final String CHOCO = "chocolate.";
 
+  private static final String ORANGE = "orange juice.";
+
   public OrderToMakerService(){
 
   }
@@ -23,30 +26,38 @@ public class OrderToMakerService {
     String result = "";
     String nbSugar = order.getNbSugar()==0 ? "" : String.valueOf(order.getNbSugar());
     Beverage beverage;
-    double moneyGiven = order.getMoneyGiven();
+    BigDecimal moneyGiven = order.getMoneyGiven();
     switch(order.getOrderType()){
       case 'C':
         beverage = Beverage.COFFEE;
-        if (moneyGiven>=beverage.getPrice()){
-          result = "C:" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
+        if (moneyGiven.compareTo(beverage.getPrice())>=0){
+          result = "C" + extraHot(order.isExtraHot()) + ":" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
         } else {
-          result = "M:"+ MISSING + (beverage.getPrice()-moneyGiven) + EURO_FOR_YOUR + COFFEE;
+          result = "M:"+ MISSING + (beverage.getPrice().subtract(moneyGiven)) + EURO_FOR_YOUR + COFFEE;
         }
         break;
       case 'T':
         beverage = Beverage.TEA;
-        if (moneyGiven>=beverage.getPrice()){
-          result = "T:" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
+        if (moneyGiven.compareTo(beverage.getPrice())>=0){
+          result = "T" + extraHot(order.isExtraHot()) + ":" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
         } else {
-          result = "M:"+ MISSING + (beverage.getPrice()-moneyGiven) + EURO_FOR_YOUR + TEA;
+          result = "M:"+ MISSING + (beverage.getPrice().subtract(moneyGiven)) + EURO_FOR_YOUR + TEA;
         }
         break;
       case 'H':
         beverage = Beverage.CHOCO;
-        if (moneyGiven>=beverage.getPrice()){
-          result = "H:" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
+        if (moneyGiven.compareTo(beverage.getPrice())>=0){
+          result = "H" + extraHot(order.isExtraHot()) + ":" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
         } else {
-          result = "M:"+ MISSING + (beverage.getPrice()-moneyGiven) + EURO_FOR_YOUR + CHOCO;
+          result = "M:"+ MISSING + (beverage.getPrice().subtract(moneyGiven)) + EURO_FOR_YOUR + CHOCO;
+        }
+        break;
+      case 'O':
+        beverage = Beverage.ORANGE;
+        if (moneyGiven.compareTo(beverage.getPrice())>=0){
+          result = "O::";
+        } else {
+          result = "M:"+ MISSING + (beverage.getPrice().subtract(moneyGiven)) + EURO_FOR_YOUR + ORANGE;
         }
         break;
       default:
@@ -60,6 +71,10 @@ public class OrderToMakerService {
     }else {
       return "";
     }
+  }
+
+  private String extraHot(boolean extraHot){
+    return extraHot ? "h" : "";
   }
 
 }

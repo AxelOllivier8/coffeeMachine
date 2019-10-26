@@ -1,28 +1,25 @@
 package models;
 
+import java.math.BigDecimal;
+
 public class Order {
 
   private char orderType;
 
   private int nbSugar;
 
-  private String messageContent;
+  private BigDecimal moneyGiven;
 
-  private double moneyGiven;
+  private boolean isExtraHot;
 
   public Order() {
   }
 
-  public Order(char orderType, int nbSugar, double moneyGiven) {
+  public Order(char orderType, int nbSugar, BigDecimal moneyGiven, boolean isExtraHot) {
     this.orderType = orderType;
     this.nbSugar = nbSugar;
     this.moneyGiven = moneyGiven;
-  }
-
-  public Order(char orderType, String messageContent, double moneyGiven) {
-    this.orderType = orderType;
-    this.messageContent = messageContent;
-    this.moneyGiven = moneyGiven;
+    this.isExtraHot = isExtraHot;
   }
 
   public char getOrderType() {
@@ -41,19 +38,19 @@ public class Order {
     this.nbSugar = nbSugar;
   }
 
-  public String getMessageContent() {
-    return messageContent;
-  }
-
-  public void setMessageContent(String messageContent) {
-    this.messageContent = messageContent;
-  }
-
-  public double getMoneyGiven() {
+  public BigDecimal getMoneyGiven() {
     return moneyGiven;
   }
 
-  public void setMoneyGiven(double moneyGiven) {
+  public void setMoneyGiven(BigDecimal moneyGiven) {
     this.moneyGiven = moneyGiven;
+  }
+
+  public boolean isExtraHot() {
+    return isExtraHot;
+  }
+
+  public void setExtraHot(boolean extraHot) {
+    isExtraHot = extraHot;
   }
 }
