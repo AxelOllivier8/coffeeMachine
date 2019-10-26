@@ -8,8 +8,8 @@ import utils.Beverage;
 
 public class ReportService {
 
-  Gson gson = new Gson();
-  DaoReport dao = new DaoReport();
+  private Gson gson = new Gson();
+  private DaoReport dao = new DaoReport();
 
   public ReportService(){
 

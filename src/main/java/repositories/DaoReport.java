@@ -28,9 +28,7 @@ public class DaoReport {
       isReader = new InputStreamReader(new FileInputStream(dataFile), "UTF-8");
 
       JsonReader myReader = new JsonReader(isReader);
-      BeverageReport report = gson.fromJson(myReader, BeverageReport.class);
-
-      return report;
+      return  gson.fromJson(myReader, BeverageReport.class);
 
     } catch (Exception e) {
       log("Error loading data:  " + e.toString());

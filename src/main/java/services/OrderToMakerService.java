@@ -1,7 +1,11 @@
 package services;
 
+import interfaces.BeverageQuantityChecker;
+import interfaces.EmailNotifier;
 import java.math.BigDecimal;
 import models.Order;
+import stubs.BeverageQuantityCheckerStub;
+import stubs.EmailNotifierStub;
 import utils.Beverage;
 
 public class OrderToMakerService {
@@ -18,10 +22,16 @@ public class OrderToMakerService {
 
   private static final String ORANGE = "orange juice.";
 
-  ReportService reportService = new ReportService();
+  private static final String SHORTAGE = "The is a shortage of water and/or milk.\n A notification has been sent to the company in order to refill it.";
+
+  private ReportService reportService = new ReportService();
+
+  private BeverageQuantityChecker bqc;
+  private EmailNotifier notifier;
 
   public OrderToMakerService(){
-
+    this.bqc = new BeverageQuantityCheckerStub();
+    this.notifier = new EmailNotifierStub();
   }
 
   public String makingDrinks(Order order){
@@ -29,42 +39,66 @@ public class OrderToMakerService {
     String nbSugar = order.getNbSugar()==0 ? "" : String.valueOf(order.getNbSugar());
     Beverage beverage;
     BigDecimal moneyGiven = order.getMoneyGiven();
-
+    boolean isEmpty;
     switch(order.getOrderType()){
       case 'C':
         beverage = Beverage.COFFEE;
-        if (moneyGiven.compareTo(beverage.getPrice())>=0){
-          result = "C" + extraHot(order.isExtraHot()) + ":" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
-          reportService.updateReport(order.getOrderType());
-        } else {
-          result = "M:"+ MISSING + (beverage.getPrice().subtract(moneyGiven)) + EURO_FOR_YOUR + COFFEE;
+        isEmpty = bqc.isEmpty("C");
+        if (isEmpty){
+          notifier.notifyMissingDrink("C");
+          result = "M:"+ SHORTAGE;
+        }else{
+          if (moneyGiven.compareTo(beverage.getPrice())>=0){
+            result = "C" + extraHot(order.isExtraHot()) + ":" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
+            reportService.updateReport(order.getOrderType());
+          } else {
+            result = "M:"+ MISSING + (beverage.getPrice().subtract(moneyGiven)) + EURO_FOR_YOUR + COFFEE;
+          }
         }
         break;
       case 'T':
         beverage = Beverage.TEA;
-        if (moneyGiven.compareTo(beverage.getPrice())>=0){
-          result = "T" + extraHot(order.isExtraHot()) + ":" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
-          reportService.updateReport(order.getOrderType());
-        } else {
-          result = "M:"+ MISSING + (beverage.getPrice().subtract(moneyGiven)) + EURO_FOR_YOUR + TEA;
+        isEmpty = bqc.isEmpty("T");
+        if (isEmpty){
+          notifier.notifyMissingDrink("T");
+          result = "M:"+ SHORTAGE;
+        }else{
+          if (moneyGiven.compareTo(beverage.getPrice())>=0){
+            result = "T" + extraHot(order.isExtraHot()) + ":" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
+            reportService.updateReport(order.getOrderType());
+          } else {
+            result = "M:"+ MISSING + (beverage.getPrice().subtract(moneyGiven)) + EURO_FOR_YOUR + TEA;
+          }
         }
         break;
       case 'H':
         beverage = Beverage.CHOCO;
-        if (moneyGiven.compareTo(beverage.getPrice())>=0){
-          result = "H" + extraHot(order.isExtraHot()) + ":" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
-          reportService.updateReport(order.getOrderType());
-        } else {
-          result = "M:"+ MISSING + (beverage.getPrice().subtract(moneyGiven)) + EURO_FOR_YOUR + CHOCO;
+        isEmpty = bqc.isEmpty("H");
+        if (isEmpty){
+          notifier.notifyMissingDrink("H");
+          result = "M:"+ SHORTAGE;
+        }else {
+          if (moneyGiven.compareTo(beverage.getPrice())>=0){
+            result = "H" + extraHot(order.isExtraHot()) + ":" + nbSugar + ":" + numberOfSticks(order.getNbSugar());
+            reportService.updateReport(order.getOrderType());
+          } else {
+            result = "M:"+ MISSING + (beverage.getPrice().subtract(moneyGiven)) + EURO_FOR_YOUR + CHOCO;
+          }
         }
         break;
       case 'O':
         beverage = Beverage.ORANGE;
-        if (moneyGiven.compareTo(beverage.getPrice())>=0){
-          result = "O::";
-          reportService.updateReport(order.getOrderType());
-        } else {
-          result = "M:"+ MISSING + (beverage.getPrice().subtract(moneyGiven)) + EURO_FOR_YOUR + ORANGE;
+        isEmpty = bqc.isEmpty("O");
+        if (isEmpty){
+          notifier.notifyMissingDrink("O");
+          result = "M:"+ SHORTAGE;
+        }else {
+          if (moneyGiven.compareTo(beverage.getPrice())>=0){
+            result = "O::";
+            reportService.updateReport(order.getOrderType());
+          } else {
+            result = "M:"+ MISSING + (beverage.getPrice().subtract(moneyGiven)) + EURO_FOR_YOUR + ORANGE;
+          }
         }
         break;
       default:
@@ -83,5 +117,6 @@ public class OrderToMakerService {
   private String extraHot(boolean extraHot){
     return extraHot ? "h" : "";
   }
+
 
 }
